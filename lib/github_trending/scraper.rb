@@ -39,7 +39,7 @@ module Github
         page.search('.repo-list').children.each do |content|
           project = Project.new
           
-          project.name = content.at('div h3 a')['href'].to_s.[1..1000]
+          project.name = content.at('div h3 a')['href'].to_s[1..1000]
           project.lang = content.at('span[itemprop*="programmingLanguage"]').inner_text
           project.description = content.at('div.py-1 p').inner_text
           project.star_count = content.at("a[href*='#{project.name}/stargazers']").inner_text.gsub(',', '').to_i
