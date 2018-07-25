@@ -35,13 +35,16 @@ module Github
         projects = []
         page = @agent.get(generate_url_for_get(language, since))
 
-        page.search('.repo-list-item').each do |content|
+        # modify
+        page.search('.repo-list').each do |content|
           project = Project.new
-          meta_data = content.search('.repo-list-meta').text
-          project.lang, project.star_count = extract_lang_and_star_from_meta(meta_data)
-          project.name        = content.search('.repo-list-name a').text.split.join
-          project.url         = BASE_HOST + content.search('.repo-list-name a').first.attributes["href"].value
-          project.description = content.search('.repo-list-description').text.gsub("\n", '').strip
+          
+          project.name = content.at('div h3 a')['href'].delete_prefix('/')
+          project.lang = content.at("span[itemprop*='programmingLanguage']").inner_text
+          project.description = content.at('div.py-1 p').inner_text
+          project.star_count = content.at("a[href*=${project.name}/stargazers").inner_text.gsub(',', '').to_i
+          project.url = BASE_HOST + '/' + project.name
+          
           projects << project
         end
         fail ScrapeException if projects.empty?
@@ -82,6 +85,7 @@ module Github
         uri.to_s
       end
 
+      # unused
       def extract_lang_and_star_from_meta(text)
         meta_data = text.split('•').map { |x| x.gsub("\n", '').strip }
         if meta_data.size == 3
