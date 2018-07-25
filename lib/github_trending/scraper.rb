@@ -36,7 +36,7 @@ module Github
         page = @agent.get(generate_url_for_get(language, since))
 
         # modify
-        page.search('.repo-list').children do |content|
+        page.search('li.col-12') do |content|
           project = Project.new
           
           project.name = content.at('div h3 a')['href'][0..1000]
