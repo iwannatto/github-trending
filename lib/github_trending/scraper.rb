@@ -42,7 +42,7 @@ module Github
           project.name = content.at('div h3 a')['href'][0..1000]
           project.lang = content.at('span[itemprop*="programmingLanguage"]').inner_text
           project.description = content.at('div.py-1 p').inner_text
-          project.star_count = content.at('a[href*="#{project.name}/stargazers"]').inner_text.gsub(',', '').to_i
+          project.star_count = content.at("a[href*='#{project.name}/stargazers']").inner_text.gsub(',', '').to_i
           project.url = BASE_HOST + '/' + project.name
           
           projects << project
