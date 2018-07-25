@@ -36,13 +36,13 @@ module Github
         page = @agent.get(generate_url_for_get(language, since))
 
         # modify
-        page.search('.repo-list').children.each do |content|
+        page.at('.repo-list').children.each do |content|
           project = Project.new
           
-          project.name = content.at('h3 a')['href'][1..1000]
+          project.name = content.at('h3 a')['href'].to_s[1..1000]
           project.lang = content.at('span[itemprop*="programmingLanguage"]').inner_text
           project.description = content.at('div.py-1 p').inner_text
-          project.star_count = content.at("a[href*='#{project.name}/stargazers']").inner_text.gsub(',', '').to_i
+          project.star_count = content.at("a[href*='#{project.name}/stargazers']").inner_text.to_s.gsub(',', '').to_i
           project.url = BASE_HOST + '/' + project.name
           
           projects << project
