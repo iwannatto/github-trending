@@ -41,7 +41,8 @@ module Github
           
           next unless content.at('h3 a')
           project.name = content.at('h3 a')['href'].to_s[1..1000]
-          project.lang = content.at('span[itemprop*="programmingLanguage"]').inner_text
+          project.lang = ""
+          project.lang = content.at('span[itemprop*="programmingLanguage"]').inner_text if content.at('span[itemprop*="programmingLanguage"]')
           project.description = content.at('div.py-1 p').inner_text
           project.star_count = content.at("a[href*='#{project.name}/stargazers']").inner_text.to_s.gsub(',', '').to_i
           project.url = BASE_HOST + '/' + project.name
